@@ -1,5 +1,30 @@
 {
-  "name": "donauwelle",
+  "version": "0.2.1",
+  "name": "create-donauwelle",
+  "description": "easily write web apps with server logic.",
+  "author": {
+    "name": "Robin Naumann",
+    "email": "robin.naumann@proton.me"
+  },
+  "keywords": [
+    "typescript",
+    "express",
+    "rest",
+    "api",
+    "framework",
+    "decorators",
+    "openapi",
+    "swagger",
+    "auth",
+    "donau",
+    "preact",
+    "elbe-ui"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RobinNaumann/donauwelle.git"
+  },
+  "license": "MIT",
   "module": "src/app.server.ts",
   "type": "module",
   "scripts": {
@@ -12,6 +37,9 @@
     "serve:dev": "bun run conc 'bun run serve:server' 'vite --config config/vite.config.client.ts' -n 'server,client' -c 'cyan,magenta' -k",
     "serve:prod": "bun run build && (cd dist && bun --env-file='.env' server/app.server.js)",
     "serve": "bun i && bun run serve:dev"
+  },
+  "bin": {
+    "create-donauwelle": "config/init.js"
   },
   "devDependencies": {
     "@eslint/js": "^9.27.0",
@@ -28,12 +56,14 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@clack/prompts": "^0.11.0",
     "@preact/preset-vite": "^2.10.1",
     "concurrently": "^9.1.2",
     "donau": "0.4.12",
     "elbe-ui": "0.4.18",
     "express": "^5.1.0",
     "jiti": "^2.4.2",
+    "kolorist": "^1.8.0",
     "preact": "^10.26.7",
     "preact-iso": "^2.9.1",
     "vite": "^6.3.5"

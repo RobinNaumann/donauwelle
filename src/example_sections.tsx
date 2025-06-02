@@ -64,10 +64,13 @@ export function SectionAbout() {
         You can integrate the features into your project or take donauwelle as a
         template:
         <ol>
-          <li>create a new project by cloning this repository as a template</li>
           <li>
-            make sure you have <b>Bun</b> installed
+            make sure you have <a href="https://bun.sh">Bun</a> installed
           </li>
+          <li>
+            create a new project using <Text.code v="npm init donauwelle" />
+          </li>
+
           <li>
             We advise using VSCode. If you want to use another editor, make sure
             to set up ESLint
