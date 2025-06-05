@@ -23,18 +23,13 @@ donauServerRun(
       },
 
       /**
-       * calculates the factorial of a number n.
-       * @param n the number to calculate the factorial for
-       * @returns the factorial of n
+       * calculates n^2 of a number n
+       * @param n the number to calculate the square for
+       * @returns the square of n
        */
-      faculty: async ({ n }) => {
-        if (n < 0) throw err.notAcceptable("Negative numbers are not allowed");
+      squared: async ({ n }) => {
         if (n >= 20) throw err.notAcceptable("number too large");
-        if (n === 0 || n === 1) return 1;
-        return Array.from({ length: n - 1 }, (_, i) => i + 2).reduce(
-          (res, i) => res * i,
-          1
-        );
+        return n * n;
       },
     }),
   },

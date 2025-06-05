@@ -1,5 +1,14 @@
 import { useServerCalls } from "donau/servercalls/client";
-import { Button, Column, ElbeTheme, Icons, makeL10n, Page } from "elbe-ui";
+import {
+  AppBase,
+  Button,
+  Column,
+  ElbeTheme,
+  Icons,
+  makeL10n,
+  Page,
+  Route,
+} from "elbe-ui";
 import { render } from "preact";
 import { useState } from "preact/hooks";
 import { serverCalls } from "./calls.shared";
@@ -39,11 +48,8 @@ function App() {
           },
         }}
       >
-        <Page
-          title="donauwelle"
-          narrow
-          footer={<AppFooter />}
-          actions={[
+        <AppBase
+          globalActions={[
             <Button.plain
               label="High Visibility"
               ariaLabel="toggle high visibility mode"
@@ -58,23 +64,33 @@ function App() {
             />,
           ]}
         >
-          <Column gap={3}>
-            <div style="padding: 3rem 0">
-              <SectionHero />
-            </div>
-            <SectionAbout />
-            <SectionElbe />
-            <SectionRestAPI />
-            <SectionServerCalls />
-            <i>
-              Have fun ☺️
-              <br />
-              yours, Robin
-            </i>
-          </Column>
-        </Page>
+          <Route path="/">
+            <_Home />
+          </Route>
+        </AppBase>
       </ElbeTheme>
     </L10n.L10n>
+  );
+}
+
+function _Home() {
+  return (
+    <Page title="donauwelle" narrow footer={<AppFooter />} actions={[]}>
+      <Column gap={3}>
+        <div style="padding: 3rem 0">
+          <SectionHero />
+        </div>
+        <SectionAbout />
+        <SectionElbe />
+        <SectionRestAPI />
+        <SectionServerCalls />
+        <i>
+          Have fun ☺️
+          <br />
+          yours, Robin
+        </i>
+      </Column>
+    </Page>
   );
 }
 

@@ -1,5 +1,5 @@
 {
-  "version": "0.2.1",
+  "version": "0.2.3",
   "name": "create-donauwelle",
   "description": "easily write web apps with server logic.",
   "author": {
@@ -29,7 +29,7 @@
   "type": "module",
   "scripts": {
     "deploy": "bun run --env-file .env.production deploy:_with_env",
-    "deploy:_with_env": "bun run build && docker build -t $DOCKER_PACKAGE_NAME . && docker push $DOCKER_PACKAGE_NAME",
+    "deploy:_with_env": "rm -rf ./dist && bun run build && docker build -t $DOCKER_PACKAGE_NAME . && docker push $DOCKER_PACKAGE_NAME",
     "build:client": "vite build --config config/vite.config.client.ts",
     "build:server": "vite build --config config/vite.config.server.ts",
     "build": "rm -rf ./dist && bun run build:client && bun run build:server && cp .env.production ./dist/.env",
@@ -59,13 +59,12 @@
     "@clack/prompts": "^0.11.0",
     "@preact/preset-vite": "^2.10.1",
     "concurrently": "^9.1.2",
-    "donau": "0.4.12",
-    "elbe-ui": "0.4.18",
+    "donau": "^0.4.13",
+    "elbe-ui": "0.4.19",
     "express": "^5.1.0",
     "jiti": "^2.4.2",
     "kolorist": "^1.8.0",
     "preact": "^10.26.7",
-    "preact-iso": "^2.9.1",
     "vite": "^6.3.5"
   }
 }

@@ -160,7 +160,7 @@ export function SectionServerCalls() {
           v={`import { serverCall } from 'donau/servercalls/shared';
 
 export const serverCalls = {
-  faculty: serverCall<{ n: number }, number>(),
+  squared: serverCall<{ n: number }, number>(),
 };`}
         />
       </Card>
@@ -174,7 +174,7 @@ export const serverCalls = {
           v={`donauServerRun(
   ...
   routes: handleServerCalls(serverCalls, {
-    faculty: async ({ n }) => 42 // add math here
+    squared: async ({ n }) => n*n 
 }));`}
         />
       </Card>
@@ -183,7 +183,7 @@ export const serverCalls = {
         <Text.code
           v={`const useServer = useServerCalls(serverCalls);
 
-const res = await useServer.faculty({n: 6});`}
+const res = await useServer.squared({n: 6});`}
         />
       </Card>
     </Column>
@@ -197,12 +197,12 @@ function _SCExample() {
     <Card scheme="secondary">
       <Row wrap>
         <Button.major
-          ariaLabel="calculate factorial"
-          label={`calculate ${n}! on the server`}
+          ariaLabel="calculate n^2"
+          label={`calculate ${n}² on the server`}
           icon={Icons.Calculator}
           onTap={async () => {
             try {
-              const res = await useServer.faculty({ n });
+              const res = await useServer.squared({ n });
               setRes(res);
               setN(n + 1);
             } catch (e) {
@@ -218,7 +218,7 @@ function _SCExample() {
               children={res.message}
             />
           ) : (
-            <Text.code v={`${n - 1}! = ${res}`} bold align="center" />
+            <Text.code v={`${n - 1}² = ${res}`} bold align="center" />
           ))}
       </Row>
     </Card>
@@ -233,7 +233,7 @@ export function AppFooter() {
         { label: "source", href: "https://github.com/RobinNaumann/donau" },
       ]}
       copyright="donauwelle"
-      version="0.2.1"
+      version="0.2.2"
       legal={{
         label: "imprint/impressum",
         href: "https://robbb.in/impressum.html",
