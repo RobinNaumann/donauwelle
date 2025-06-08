@@ -6,7 +6,7 @@
 import * as prompts from "@clack/prompts";
 import * as kl from "kolorist";
 import { spawn } from "node:child_process";
-import { cpSync, existsSync, readFileSync } from "node:fs";
+import { cpSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
