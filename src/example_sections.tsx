@@ -9,12 +9,14 @@ import {
   int,
   isElbeError,
   Row,
+  showToast,
   Spaced,
   Text,
   toElbeError,
 } from "elbe-ui";
 import { useState } from "preact/hooks";
 import { L10n, useServer } from "./app";
+import { apiService } from "./s_api";
 
 export function SectionHero() {
   const { c } = L10n.useL10n();
@@ -130,6 +132,15 @@ export function SectionRestAPI() {
             const [host, port] = window.location.host.split(":");
             const apiPort = import.meta.env.VITE_API_PORT ?? port;
             window.open(`http://${host}:${apiPort}/docs/`, "_blank");
+          }}
+        />
+        <Button.major
+          ariaLabel="call hello endpoint"
+          label="call /hello?name=John"
+          icon={Icons.HandMetal}
+          onTap={async () => {
+            const msg = await apiService.getHello("John");
+            showToast(`API says: '${msg}'`);
           }}
         />
       </Row>

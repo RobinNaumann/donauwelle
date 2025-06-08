@@ -1,5 +1,5 @@
 {
-  "version": "0.2.3",
+  "version": "0.2.4",
   "name": "create-donauwelle",
   "description": "easily write web apps with server logic.",
   "author": {
@@ -59,7 +59,7 @@
     "@clack/prompts": "^0.11.0",
     "@preact/preset-vite": "^2.10.1",
     "concurrently": "^9.1.2",
-    "donau": "^0.4.13",
+    "donau": "0.4.16",
     "elbe-ui": "0.4.19",
     "express": "^5.1.0",
     "jiti": "^2.4.2",
