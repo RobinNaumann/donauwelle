@@ -6,8 +6,9 @@
 import * as prompts from "@clack/prompts";
 import * as kl from "kolorist";
 import { spawn } from "node:child_process";
-import { cpSync, existsSync, readFileSync, writeFileSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { cpSync, existsSync, readFileSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 async function useSpinner(startMessage, fn, finishMessage) {
   const s = prompts.spinner();
@@ -59,14 +60,30 @@ async function createDonauwelle() {
   await useSpinner(
     "Setting up your project directory...",
     () => {
-      const templateDir = join(process.cwd(), ".");
-      cpSync(templateDir, targetDir, { recursive: true });
+      try {
+        const __dirname = dirname(fileURLToPath(import.meta.url));
+        const templateDir = resolve(__dirname, "../");
+        cpSync(templateDir, targetDir, {
+          recursive: true,
+          filter: (src) => {
+            if (src.endsWith("/config/init.js")) return false;
+            if (src.endsWith("node_modules")) return false;
+            if (src.endsWith("bun.lockb")) return false;
+            return true;
+          },
+        });
 
-      // change the package.json name to the project name
-      const packageJsonPath = join(targetDir, "package.json");
-      const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
-      packageJson.name = dir.split("/").pop() || dir;
-      writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+        // change the package.json name to the project name
+        const packageJsonPath = join(targetDir, "package.json");
+        const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
+        packageJson.name = dir.split("/").pop() || dir;
+        packageJson.description = `a project with donauwelle`;
+        packageJson.bin = undefined;
+        writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+      } catch (e) {
+        console.error("Error setting up project directory:", e);
+        throw e;
+      }
     },
     "Set up project directory"
   );
