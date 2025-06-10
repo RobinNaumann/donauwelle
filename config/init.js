@@ -78,6 +78,7 @@ async function createDonauwelle() {
         const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
         packageJson.name = dir.split("/").pop() || dir;
         packageJson.description = `a project with donauwelle`;
+        packageJson.author = undefined;
         packageJson.bin = undefined;
         writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
       } catch (e) {
