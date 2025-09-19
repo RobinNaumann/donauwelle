@@ -16,7 +16,7 @@ _<img src="./public/screenshot.png" width="300" />_
 ### Install
 
 1. build your app on top of this template either:
-   - using `npm init donauwelle`
+   - using **`bun create donauwelle`** (or `npm init donauwelle`)
    - cloning this repository (and changing the name in `package.json`)
 2. _(optional) adapt the configuration in the `.env` files_
 3. run `bun run serve` to start in development mode
