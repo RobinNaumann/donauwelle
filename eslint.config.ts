@@ -159,6 +159,5 @@ export default defineConfig([
       "no-constant-condition": "warn",
     },
   },
-  //@ts-expect-error eslint does not find the type here
   tseslint.configs.base,
 ]);

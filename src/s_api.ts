@@ -1,8 +1,10 @@
-import { ApiClient } from "donau/src/api_client";
+import { ApiClient } from "donau/client";
+
+const apiPort = import.meta.env.VITE_API_PORT ?? null;
 
 class APIService {
   private _api = new ApiClient({
-    port: import.meta.env.VITE_API_PORT ?? null,
+    port: apiPort ? Number(apiPort) : undefined,
   });
 
   getHello(name: string): Promise<string> {

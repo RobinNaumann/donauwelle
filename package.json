@@ -17,7 +17,7 @@
     "swagger",
     "auth",
     "donau",
-    "preact",
+    "react",
     "elbe-ui"
   ],
   "repository": {
@@ -29,7 +29,7 @@
   "type": "module",
   "scripts": {
     "deploy": "bun run --env-file .env.production deploy:_with_env",
-    "deploy:_with_env": "rm -rf ./dist && bun run build && docker build -t $DOCKER_PACKAGE_NAME . && docker push $DOCKER_PACKAGE_NAME",
+    "deploy:_with_env": "docker build -t $DOCKER_PACKAGE_NAME . && docker push $DOCKER_PACKAGE_NAME",
     "build:client": "vite build --config config/vite.config.client.ts",
     "build:server": "vite build --config config/vite.config.server.ts",
     "build": "rm -rf ./dist && bun run build:client && bun run build:server && cp .env.production ./dist/.env",
@@ -42,29 +42,33 @@
     "create-donauwelle": "config/init.js"
   },
   "devDependencies": {
-    "@eslint/js": "^9.27.0",
-    "@types/bun": "latest",
-    "@types/cors": "^2.8.18",
-    "@types/express": "^5.0.2",
-    "eslint": "^9.27.0",
-    "eslint-config-preact": "^1.5.0",
+    "@eslint/js": "^9.39.1",
+    "@types/bun": "^1.3.1",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "eslint": "^9.39.1",
+    "babel-plugin-react-compiler": "^19.1.0-rc.1-rc-af1b7da-20250421",
     "eslint-plugin-react": "^7.37.5",
-    "globals": "^16.2.0",
-    "typescript-eslint": "^8.33.0"
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
+    "typescript-eslint": "^8.46.3",
+    "@vitejs/plugin-react": "^4.7.0"
   },
   "peerDependencies": {
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "@clack/prompts": "^0.11.0",
-    "@preact/preset-vite": "^2.10.1",
-    "concurrently": "^9.1.2",
-    "donau": "0.4.16",
-    "elbe-ui": "0.4.19",
+    "@types/react-dom": "^19.2.2",
+    "concurrently": "^9.2.1",
+    "donau": "1.0.12",
+    "elbe-ui": "1.0.8",
     "express": "^5.1.0",
-    "jiti": "^2.4.2",
+    "jiti": "^2.6.1",
     "kolorist": "^1.8.0",
-    "preact": "^10.26.7",
-    "vite": "^6.3.5"
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "vite": "^7.2.1"
   }
 }

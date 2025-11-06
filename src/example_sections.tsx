@@ -11,11 +11,12 @@ import {
   Row,
   showToast,
   Spaced,
+  Spinner,
   Text,
   toElbeError,
 } from "elbe-ui";
-import { useState } from "preact/hooks";
-import { L10n, useServer } from "./app";
+import { useMemo, useState } from "react";
+import { L10n, makeServerCall, serverChannels } from "./app";
 import { apiService } from "./s_api";
 
 export function SectionHero() {
@@ -168,11 +169,11 @@ export function SectionServerCalls() {
       </span>
       <Card bordered>
         <Text.code
-          v={`import { serverCall } from 'donau/servercalls/shared';
+          v={`import { useServerCalls } from "donau/servercalls/client";
 
-export const serverCalls = {
-  squared: serverCall<{ n: number }, number>(),
-};`}
+export const { makeServerCall } = useServerCalls(serverCallDefinitions, {
+  port: import.meta.env.VITE_API_PORT,
+});`}
         />
       </Card>
       <span>
@@ -191,10 +192,58 @@ export const serverCalls = {
       </Card>
       <span>now you can use the functions in your client files: 🎉</span>
       <Card bordered>
-        <Text.code
-          v={`const useServer = useServerCalls(serverCalls);
+        <Text.code v={`const res = await makeServerCall.squared({n: 6});`} />
+      </Card>
+    </Column>
+  );
+}
 
-const res = await useServer.squared({n: 6});`}
+export function SectionServerChannels() {
+  return (
+    <Column>
+      <Text.h3 v="Server Channels" />
+      <span>
+        donauwelle also allows you to define real-time communication channels
+        between client and server. These channels are also type safe in
+        Typescript and provide built-in error handling.
+        <br /> Under the hood, they utilize websockets
+      </span>
+      <_SChannelExample />
+
+      <Text.h5 v="usage" style={{ marginTop: "1rem" }} />
+      <span>
+        start by defining the type signatures of your channels in a shared (
+        <Text.code v=".shared.ts" />) file:
+      </span>
+      <Card bordered>
+        <Text.code
+          v={`import { useServerChannels } from "donau/serverchannels/client";
+
+export const { serverChannels } = useServerChannels({
+  port: import.meta.env.VITE_API_PORT,
+  shared: serverChannelDefinitions,
+});`}
+        />
+      </Card>
+      <span>
+        next, push some data to these channels from a (
+        <Text.code v=".server.ts" />) file and serve this server
+      </span>
+      <Card bordered>
+        <Text.code
+          v={`export const channelServer = new ServerChannelServer<any,typeof serverChannelDefinitions>({
+  sharedChannels: { ...serverChannelDefinitions, ..._sharedPluginChannels() },
+});`}
+        />
+      </Card>
+      <span>now you can use the functions in your client files: 🎉</span>
+      <Card bordered>
+        <Text.code
+          v={`const channel = serverChannels.shared.appClientConfig({
+      channel: "",
+      onData: (config) => {...},
+      onError: (err) => setError(err),
+    })`}
         />
       </Card>
     </Column>
@@ -213,7 +262,7 @@ function _SCExample() {
           icon={Icons.Calculator}
           onTap={async () => {
             try {
-              const res = await useServer.squared({ n });
+              const res = await makeServerCall.squared({ n });
               setRes(res);
               setN(n + 1);
             } catch (e) {
@@ -226,12 +275,36 @@ function _SCExample() {
             <Banner
               kind="error"
               title={"server returned an error"}
-              children={res.message}
+              children={<>{res.message}</>}
             />
           ) : (
             <Text.code v={`${n - 1}² = ${res}`} bold align="center" />
           ))}
       </Row>
+    </Card>
+  );
+}
+
+function _SChannelExample() {
+  const [latest, setLatest] = useState<string | null>(null);
+  useMemo(() => {
+    const channel = serverChannels.shared.live({
+      channel: "",
+      onData: (n) => setLatest(n.message),
+      onError: (err) => showToast(`channel error: ${err.message}`),
+    });
+    return () => channel.cancel();
+  }, []);
+
+  return (
+    <Card scheme="secondary">
+      {latest ? (
+        <Text bold v={latest} />
+      ) : (
+        <Column cross="center" main="center">
+          <Spinner />
+        </Column>
+      )}
     </Card>
   );
 }

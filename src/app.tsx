@@ -1,4 +1,6 @@
 import { useServerCalls } from "donau/servercalls/client";
+import { useServerChannels } from "donau/serverchannels/client";
+
 import {
   AppBase,
   Button,
@@ -9,9 +11,12 @@ import {
   Page,
   Route,
 } from "elbe-ui";
-import { render } from "preact";
-import { useState } from "preact/hooks";
-import { serverCalls } from "./calls.shared";
+import { StrictMode, useState } from "react";
+import { createRoot } from "react-dom/client";
+import {
+  serverCallDefinitions,
+  serverChannelDefinitions,
+} from "./calls.shared";
 import {
   AppFooter,
   SectionAbout,
@@ -19,12 +24,17 @@ import {
   SectionHero,
   SectionRestAPI,
   SectionServerCalls,
+  SectionServerChannels,
 } from "./example_sections";
 
-export const useServer = useServerCalls(
-  serverCalls,
-  import.meta.env.VITE_API_PORT ?? null
-);
+export const { serverChannels } = useServerChannels({
+  port: import.meta.env.VITE_API_PORT,
+  shared: serverChannelDefinitions,
+});
+
+export const { makeServerCall } = useServerCalls(serverCallDefinitions, {
+  port: import.meta.env.VITE_API_PORT,
+});
 
 // you can define localized strings that automatically adapt to
 // the browsers language
@@ -77,13 +87,14 @@ function _Home() {
   return (
     <Page title="donauwelle" narrow footer={<AppFooter />} actions={[]}>
       <Column gap={3}>
-        <div style="padding: 3rem 0">
+        <div style={{ padding: "3rem 0" }}>
           <SectionHero />
         </div>
         <SectionAbout />
         <SectionElbe />
         <SectionRestAPI />
         <SectionServerCalls />
+        <SectionServerChannels />
         <i>
           Have fun ☺️
           <br />
@@ -94,5 +105,8 @@ function _Home() {
   );
 }
 
-const root = document.getElementById("root");
-if (root) render(<App />, root);
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);

@@ -5,6 +5,7 @@ export default defineConfig({
   build: {
     outDir: "dist/server",
     ssr: true,
+    target: "node16",
     rollupOptions: {
       input: "./src/app.server.ts",
     },

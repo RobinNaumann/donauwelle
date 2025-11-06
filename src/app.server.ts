@@ -3,13 +3,26 @@
 // YOU CAN MODIFY IT, BUT MAKE SURE NOT TO REMOVE IT
 //
 
-import { donauServerRun, err, parameterQuery, route } from "donau";
-import { handleServerCalls, serveFrontend } from "donau/servercalls/server";
-import { serverCalls } from "./calls.shared";
+import { donauServerRun, err, route, serveFrontend } from "donau/server";
+import { handleServerCalls } from "donau/servercalls/server";
+import { ServerChannelServer } from "donau/serverchannels/server";
+import {
+  serverCallDefinitions,
+  serverChannelDefinitions,
+} from "./calls.shared";
 
 const PORT = Number.parseInt(process.env.PORT ?? "3000");
 
-const serverCallRoutes = handleServerCalls(serverCalls, {
+export const channelServer = new ServerChannelServer({
+  sharedChannels: serverChannelDefinitions,
+});
+channelServer.handleShared({
+  live: async (params, client) => {
+    // this will be called when a client sends a message
+  },
+});
+
+const serverCallRoutes = handleServerCalls(serverCallDefinitions, {
   asString: async ({ x }) => {
     return x.toString();
   },
@@ -25,7 +38,7 @@ const serverCallRoutes = handleServerCalls(serverCalls, {
   },
 });
 
-donauServerRun(
+const donauServer = donauServerRun(
   PORT,
   {
     info: {
@@ -35,15 +48,42 @@ donauServerRun(
     },
     routes: [
       ...serverCallRoutes,
+      ...channelServer.infoRoutes(),
       route("/hello", {
         method: "get",
         description: "returns a greeting to you",
-        parameters: [parameterQuery("name", { type: "string" })],
-        worker: (name) => {
+        parameters: {
+          name: {
+            type: "string",
+            description: "your name",
+            optional: false,
+          },
+        },
+        worker: ({ name }) => {
           return `Hey, ${name}! how are you?`;
         },
       }),
     ],
   },
-  [process.env.SERVE_FRONTEND === "true" && serveFrontend("client")]
+  [process.env.SERVE_FRONTEND === "true" ? serveFrontend("client") : null]
 );
+if (donauServer?.server) channelServer.serve({ server: donauServer.server });
+
+// send demo messages to the server channels every 5 seconds
+const helloInLanguages = [
+  "Hello",
+  "Hallo",
+  "Ciao",
+  "Hola",
+  "Bonjour",
+  "Hej",
+  "Salve",
+  "Olá",
+  "Ahoj",
+  "Nǐ hǎo",
+];
+setInterval(() => {
+  const i = Math.floor(Math.random() * helloInLanguages.length);
+  console.log(`sending message: ${helloInLanguages[i]}`);
+  channelServer.shared.live.send({ message: helloInLanguages[i] });
+}, 5000);
